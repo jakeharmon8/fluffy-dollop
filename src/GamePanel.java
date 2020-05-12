@@ -20,9 +20,10 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 	public static int S_HEIGHT = 512;
 	
 	public Platform platform = new Platform(); 
-	public int ballSize = 20;
-	public Ball ball = new Ball(platform.x + platform.size/2 - ballSize/2, 
-			S_HEIGHT - 20 - ballSize, ballSize);
+	public int ballRadius = 10;
+	public Ball ball = new Ball(platform.x + platform.size/2, 
+			S_HEIGHT - platform.height - ballRadius, ballRadius);
+	public Brick brick = new Brick(256, 256, 50, 100, Color.pink);
 	
 	public Timer t;
 	
@@ -43,6 +44,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 	public void paintComponent(Graphics g) {
 		platform.draw(g);
 		ball.draw(g);
+		brick.draw(g);
 	}
 
 	@Override
@@ -86,20 +88,20 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		ball.x += ball.speedX;
-		if (ball.x > S_WIDTH - ball.size) {
-			ball.x = 2 * (S_WIDTH - ball.size) - ball.x;
+		if (ball.x > S_WIDTH - ball.radius) {
+			ball.x = 2 * (S_WIDTH - ball.radius) - ball.x;
 			ball.speedX *= -1;
-		} else if (ball.x < 0) {
-			ball.x *= -1;
+		} else if (ball.x < ball.radius) {
+			ball.x += ball.x;
 			ball.speedX *= -1;
 		}
 		
 		ball.y += ball.speedY;
-		if (ball.y > S_HEIGHT - platform.height - ball.size) {
-			ball.y = 2 * (S_HEIGHT - platform.height - ball.size) - ball.y; 
+		if (ball.y > S_HEIGHT - platform.height - ball.radius) {
+			ball.y = 2 * (S_HEIGHT - platform.height - ball.radius) - ball.y; 
 			ball.speedY *= -1; 
-		} else if (ball.y < 0) {
-			ball.y *= -1; 
+		} else if (ball.y < ball.radius) {
+			ball.y += ball.radius; 
 			ball.speedY *= -1;
 		}
 		repaint();
