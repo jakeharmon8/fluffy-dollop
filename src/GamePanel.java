@@ -12,6 +12,9 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import physics.AabbCollider;
+import physics.CircleCollider;
+
 
 public class GamePanel extends JPanel implements KeyListener, ActionListener {
 
@@ -24,6 +27,9 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 	public Ball ball = new Ball(platform.x + platform.size/2, 
 			S_HEIGHT - platform.height - ballRadius, ballRadius);
 	public Brick brick = new Brick(256, 256, 50, 100, Color.pink);
+	
+	public AabbCollider testBrick = new AabbCollider(300, 200, 150, 70);
+	public CircleCollider testBall = new CircleCollider(100, 100, 5, 5, 20);
 	
 	public Timer t;
 	
@@ -42,9 +48,18 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 
 	@Override
 	public void paintComponent(Graphics g) {
-		platform.draw(g);
-		ball.draw(g);
-		brick.draw(g);
+
+//		platform.draw(g);
+//		ball.draw(g);
+//		brick.draw(g);
+		
+		g.setColor(Color.white);
+		g.fillRect(0, 0, S_WIDTH, S_HEIGHT);
+		
+		testBrick.draw(g);
+		testBall.draw(g);
+		
+		testBall.drawDebugCollisionInfo(testBrick, g);
 	}
 
 	@Override
@@ -71,8 +86,10 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 			case KeyEvent.VK_Q:
 				break;
 			case KeyEvent.VK_SPACE:
-				ball.speedX = 10; 
-				ball.speedY = -10;
+				t.stop();
+				break;
+			case KeyEvent.VK_ENTER:
+				t.start();
 				break;
 		}
 		
@@ -105,6 +122,8 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 			ball.speedY *= -1;
 		}
 		repaint();
+		
+		testBall.pos = testBall.pos.add(testBall.vel);
 	}
 	
 }
