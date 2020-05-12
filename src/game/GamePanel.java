@@ -1,3 +1,4 @@
+package game;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -14,7 +15,6 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-import physics.AabbCollider;
 import physics.CircleCollider;
 import physics.Vector2D;
 
@@ -25,13 +25,12 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	public static int S_WIDTH = 512;
 	public static int S_HEIGHT = 512;
 	
-	public Platform platform = new Platform(); 
+	public Platform platform = new Platform(S_WIDTH/2, S_HEIGHT * 0.95, 75.0, 10.0, Color.black); 
 	public int ballRadius = 10;
-	public Ball ball = new Ball(platform.x + platform.size/2, 
-			S_HEIGHT - platform.height - ballRadius, ballRadius);
+	public Ball ball = new Ball(256, 30, 10);
 	public Brick brick = new Brick(256, 256, 50, 100, Color.pink);
 	
-	public AabbCollider testBrick = new AabbCollider(300, 200, 220, 90);
+	public Brick testBrick = new Brick(300, 200, 100, 50, Color.green);
 	public CircleCollider testBall = new CircleCollider(100, 100, 5, 5, 40);
 	
 	public Timer t;
@@ -53,12 +52,13 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	@Override
 	public void paintComponent(Graphics g) {
 
-//		platform.draw(g);
 //		ball.draw(g);
 //		brick.draw(g);
 		
-		g.setColor(Color.white);
-		g.fillRect(0, 0, S_WIDTH, S_HEIGHT);
+//		g.setColor(Color.white);
+//		g.fillRect(0, 0, S_WIDTH, S_HEIGHT);
+		
+		platform.draw(g);
 		
 		testBrick.draw(g);
 		testBall.draw(g);
@@ -70,13 +70,13 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	public void keyPressed(KeyEvent e) {
 		switch(e.getKeyCode()) {
 			case KeyEvent.VK_RIGHT:
-				platform.x += 10;
+				platform.pos.x += 10;
 				if (ball.speedX  == 0) {
 					ball.x += 10;
 				}
 				break;
 			case KeyEvent.VK_LEFT:
-				platform.x -= 10;
+				platform.pos.x -= 10;
 				if (ball.speedX == 0) {
 					ball.x -= 10;
 				}
@@ -119,7 +119,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		
 		ball.y += ball.speedY;
 		if (ball.y > S_HEIGHT - platform.height - ball.radius) {
-			ball.y = 2 * (S_HEIGHT - platform.height - ball.radius) - ball.y; 
+			ball.y = (int) (2 * (S_HEIGHT - platform.height - ball.radius) - ball.y); 
 			ball.speedY *= -1; 
 		} else if (ball.y < ball.radius) {
 			ball.y += ball.radius; 

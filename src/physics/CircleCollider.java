@@ -3,6 +3,8 @@ package physics;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import game.Brick;
+
 public class CircleCollider {
 	public Vector2D pos, vel;
 	public double r;
@@ -15,7 +17,7 @@ public class CircleCollider {
 		this.r = r;
 	}
 	
-	public boolean collide(AabbCollider aabb) {
+	public boolean collide(Brick aabb) {
 		Vector2D pointOfIntersection = getPointOfIntersection(aabb);
 		
 		if(pos.sub(pointOfIntersection).magnitude() > r) {
@@ -25,7 +27,7 @@ public class CircleCollider {
 		return true;
 	}
 	
-	public void drawDebugCollisionInfo(AabbCollider aabb, Graphics g) {
+	public void drawDebugCollisionInfo(Brick aabb, Graphics g) {
 		getPointOfIntersection(aabb).draw(aabb.pos, g, Color.red);
 		System.out.println("P: " + getPointOfIntersection(aabb));
 		getCenterToCollision(aabb).draw(pos, g, Color.magenta);
@@ -34,16 +36,16 @@ public class CircleCollider {
 		System.out.println("R: " + getRadialIntersection(aabb));
 	}
 	
-	private Vector2D getPointOfIntersection(AabbCollider aabb) {
+	private Vector2D getPointOfIntersection(Brick aabb) {
 		return pos.sub(aabb.pos).clamp(aabb.width/2, aabb.height/2);
 	}
 	
-	private Vector2D getCenterToCollision(AabbCollider aabb) {
+	private Vector2D getCenterToCollision(Brick aabb) {
 		Vector2D p = getPointOfIntersection(aabb);
 		return p.add(aabb.pos).sub(pos);
 	}
 	
-	private Vector2D getRadialIntersection(AabbCollider aabb) {
+	private Vector2D getRadialIntersection(Brick aabb) {
 		Vector2D d = getCenterToCollision(aabb);
 		return d.scaleTo(r - d.magnitude());
 	}
