@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,9 +16,10 @@ import javax.swing.Timer;
 
 import physics.AabbCollider;
 import physics.CircleCollider;
+import physics.Vector2D;
 
 
-public class GamePanel extends JPanel implements KeyListener, ActionListener {
+public class GamePanel extends JPanel implements KeyListener, ActionListener, MouseMotionListener {
 
 	private static final long serialVersionUID = 1L;
 	public static int S_WIDTH = 512;
@@ -27,13 +30,14 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 	public Ball ball = new Ball(platform.x + platform.size/2 - ballSize/2, 
 			S_HEIGHT - 20 - ballSize, ballSize);
 	
-	public AabbCollider testBrick = new AabbCollider(300, 200, 150, 70);
-	public CircleCollider testBall = new CircleCollider(100, 100, 5, 5, 20);
+	public AabbCollider testBrick = new AabbCollider(300, 200, 220, 90);
+	public CircleCollider testBall = new CircleCollider(100, 100, 5, 5, 40);
 	
 	public Timer t;
 	
 	public GamePanel() {
 		addKeyListener(this);
+		addMouseMotionListener(this);
 		setPreferredSize(new Dimension(S_WIDTH, S_HEIGHT));
 		
 		t = new Timer(50, this);
@@ -120,7 +124,19 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 		}
 		repaint();
 		
-		testBall.pos = testBall.pos.add(testBall.vel);
+//		testBall.pos = testBall.pos.add(testBall.vel);
 	}
-	
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		testBall.pos = new Vector2D(e.getX(), e.getY());
+		
+		repaint();
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 }
