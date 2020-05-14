@@ -25,8 +25,16 @@ public class Brick {
 		g.fillRect((int)(pos.x - width/2), (int)(pos.y - height/2), (int)width, (int)height);
 		// shading
 		g.setColor(c.darker());
+		g.fillRect((int)(pos.x - width/2), (int)(pos.y-height/2), 5, (int)height);
+		g.fillRect((int)(pos.x - width/2), (int)(pos.y-height/2), (int)width, 5);
+		g.setColor(c.darker().darker());
 		g.fillRect((int)(pos.x + width/2 - 7), (int)(pos.y - height/2), 7, (int)height);
 		g.fillRect((int)(pos.x  - width/2),  (int)(pos.y + height/2 - 7), (int)width, 7);
+		g.setColor(c.darker());
+		g.fillPolygon(new int[] {(int)(pos.x+width/2-7), (int)(pos.x+width/2-7), (int)(pos.x+width/2)}, 
+				new int[] {(int)(pos.y-height/2), (int)(pos.y-height/2+5), (int)(pos.y-height/2)}, 3);
+		g.fillPolygon(new int[] {(int)(pos.x-width/2), (int)(pos.x-width/2), (int)(pos.x-width/2+5)}, 
+				new int[] {(int)(pos.y+height/2), (int)(pos.y+height/2-7), (int)(pos.y+height/2-7)}, 3);
 	}
 	
 	

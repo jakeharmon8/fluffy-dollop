@@ -27,10 +27,10 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	
 	public Platform platform = new Platform(S_WIDTH/2, S_HEIGHT * 0.95, 75.0, 10.0, Color.black); 
 	public int ballRadius = 10;
-	public Ball ball = new Ball(256, 30, 10);
+	public Ball ball = new Ball(256, S_HEIGHT - 40, 10);
 	public Brick brick = new Brick(256, 256, 50, 100, Color.pink);
 	
-	public Brick testBrick = new Brick(300, 200, 100, 50, Color.green);
+	public Brick testBrick = new Brick(300, 200, 100, 50, Color.orange);
 	public CircleCollider testBall = new CircleCollider(100, 100, 5, 5, 40);
 	
 	public Timer t;
@@ -52,7 +52,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	@Override
 	public void paintComponent(Graphics g) {
 
-//		ball.draw(g);
+		ball.draw(g);
 //		brick.draw(g);
 		
 //		g.setColor(Color.white);
