@@ -10,13 +10,21 @@ public class Brick {
 	public Color c;
 	
 	public int hp = 1;
+	public boolean invincible = false;
 
 	public Brick(double x, double y, double width, double height, Color c) {
-		// TODO Auto-generated constructor stub
 		this.pos = new Vector2D(x, y); 
 		this.height = height; 
 		this.width = width; 
 		this.c = c;
+	}
+	
+	public Brick(double x, double y, double width, double height, Color c, boolean invincible) {
+		this.pos = new Vector2D(x, y); 
+		this.height = height; 
+		this.width = width; 
+		this.c = c;
+		this.invincible = invincible;
 	}
 	
 	
