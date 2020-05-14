@@ -8,6 +8,8 @@ public class Brick {
 	public Vector2D pos;
 	public double height, width; 
 	public Color c;
+	
+	public int hp = 1;
 
 	public Brick(double x, double y, double width, double height, Color c) {
 		// TODO Auto-generated constructor stub

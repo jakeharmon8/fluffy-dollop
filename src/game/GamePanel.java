@@ -121,11 +121,17 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	public void actionPerformed(ActionEvent arg0) {
 		testBall.pos = testBall.pos.add(testBall.vel);
 		
+		ArrayList<Brick> toRemove = new ArrayList<>();
 		for(Brick b : bricks) {
 			if(testBall.collide(b)) {
 				System.out.println("Collide!");
+				b.hp--;
+				if(b.hp == 0) {
+					toRemove.add(b);
+				}
 			}
 		}
+		bricks.removeAll(toRemove);
 		
 		if(testBall.collide(platform)) {
 			System.out.println("Collide!");
