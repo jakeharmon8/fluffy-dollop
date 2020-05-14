@@ -41,9 +41,12 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		addMouseMotionListener(this);
 		setPreferredSize(new Dimension(S_WIDTH, S_HEIGHT));
 		
-		bricks.add(new Brick(-3, 400, 100, 50, Color.green));
+		bricks.add(new Brick(S_WIDTH/2, 0, S_WIDTH, S_HEIGHT/32, Color.black));
+		bricks.add(new Brick(S_WIDTH/2, S_HEIGHT, S_WIDTH, S_HEIGHT/32, Color.black));
+		bricks.add(new Brick(0, S_HEIGHT/2, S_WIDTH/32, S_HEIGHT, Color.black));
+		bricks.add(new Brick(S_WIDTH, S_HEIGHT/2, S_WIDTH/32, S_HEIGHT, Color.black));
 		bricks.add(new Brick(300, 200, 100, 50, Color.green));
-		bricks.add(new Brick(0, -10, 100, 50, Color.green));
+		bricks.add(new Brick(100, 400, 100, 50, Color.green));
 		bricks.add(new Brick(400, 40, 100, 50, Color.green));
 		
 		t = new Timer(50, this);
