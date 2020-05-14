@@ -41,6 +41,10 @@ public class Vector2D {
 		return Math.sqrt(x * x + y * y);
 	}
 	
+	public Vector2D pointTo(Vector2D v) {
+		return v.scaleTo(magnitude());
+	}
+	
 	public void draw(Vector2D start, Graphics g) {
 		draw(start, g, Color.black);
 	}

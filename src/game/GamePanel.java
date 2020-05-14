@@ -8,9 +8,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -26,12 +24,12 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	public static int S_HEIGHT = 512;
 	
 	public Platform platform = new Platform(S_WIDTH/2, S_HEIGHT * 0.95, 75.0, 10.0, Color.black); 
-	public int ballRadius = 10;
-	public Ball ball = new Ball(256, S_HEIGHT - 40, 10);
-	public Brick brick = new Brick(256, 256, 50, 100, Color.pink);
-	
-	public Brick testBrick = new Brick(300, 200, 100, 50, Color.orange);
-	public CircleCollider testBall = new CircleCollider(100, 100, 5, 5, 40);
+//	public int ballRadius = 10;
+//	public Ball ball = new Ball(256, S_HEIGHT - 40, 10);
+//	public Brick brick = new Brick(256, 256, 50, 100, Color.pink);
+	public ArrayList<Brick> bricks = new ArrayList<>();
+//	public Brick testBrick = new Brick(300, 200, 100, 50, Color.green);
+	public CircleCollider testBall = new CircleCollider(S_WIDTH/2, S_HEIGHT*.8, 10, -10, 16);
 	
 	public Timer t;
 	
@@ -39,6 +37,20 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		addKeyListener(this);
 		addMouseMotionListener(this);
 		setPreferredSize(new Dimension(S_WIDTH, S_HEIGHT));
+		
+		bricks.add(new Brick(S_WIDTH/2, 0, S_WIDTH, S_HEIGHT/32, Color.black, true));
+		bricks.add(new Brick(S_WIDTH/2, S_HEIGHT, S_WIDTH, S_HEIGHT/32, Color.black, true));
+		bricks.add(new Brick(0, S_HEIGHT/2, S_WIDTH/32, S_HEIGHT, Color.black, true));
+		bricks.add(new Brick(S_WIDTH, S_HEIGHT/2, S_WIDTH/32, S_HEIGHT, Color.black, true));
+		
+		for(int i = 0; i < 4; i++) {
+			for(int j = 0; j < 4; j++) {
+				bricks.add(new Brick(i * 100 + 150, j * 50 + 100, 90, 45, Color.green));
+			}
+		}
+//		bricks.add(new Brick(300, 200, 100, 50, Color.green));
+//		bricks.add(new Brick(100, 400, 100, 50, Color.green));
+//		bricks.add(new Brick(400, 40, 100, 50, Color.green));
 		
 		t = new Timer(50, this);
 		t.start();
@@ -51,19 +63,20 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 
 	@Override
 	public void paintComponent(Graphics g) {
+		g.setColor(Color.white);
+		g.fillRect(0, 0, S_WIDTH, S_HEIGHT);
 
-		ball.draw(g);
+//		ball.draw(g);
 //		brick.draw(g);
-		
-//		g.setColor(Color.white);
-//		g.fillRect(0, 0, S_WIDTH, S_HEIGHT);
 		
 		platform.draw(g);
 		
-		testBrick.draw(g);
+		for(Brick b : bricks) {
+			b.draw(g);
+		}
 		testBall.draw(g);
 		
-		testBall.drawDebugCollisionInfo(testBrick, g);
+//		testBall.drawDebugCollisionInfo(testBrick, g);
 	}
 
 	@Override
@@ -71,15 +84,9 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		switch(e.getKeyCode()) {
 			case KeyEvent.VK_RIGHT:
 				platform.pos.x += 10;
-				if (ball.speedX  == 0) {
-					ball.x += 10;
-				}
 				break;
 			case KeyEvent.VK_LEFT:
 				platform.pos.x -= 10;
-				if (ball.speedX == 0) {
-					ball.x -= 10;
-				}
 				break;
 			case KeyEvent.VK_S:
 				break;
@@ -91,6 +98,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 				break;
 			case KeyEvent.VK_SPACE:
 				t.stop();
+				actionPerformed(null);
 				break;
 			case KeyEvent.VK_ENTER:
 				t.start();
@@ -108,26 +116,27 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		ball.x += ball.speedX;
-		if (ball.x > S_WIDTH - ball.radius) {
-			ball.x = 2 * (S_WIDTH - ball.radius) - ball.x;
-			ball.speedX *= -1;
-		} else if (ball.x < ball.radius) {
-			ball.x += ball.x;
-			ball.speedX *= -1;
+		testBall.pos = testBall.pos.add(testBall.vel);
+		
+		ArrayList<Brick> toRemove = new ArrayList<>();
+		for(Brick b : bricks) {
+			if(testBall.collide(b)) {
+				System.out.println("Collide!");
+				if(!b.invincible) {
+					b.hp--;
+					if(b.hp == 0) {
+						toRemove.add(b);
+					}
+				}
+			}
+		}
+		bricks.removeAll(toRemove);
+		
+		if(testBall.collide(platform)) {
+			System.out.println("Collide!");
 		}
 		
-		ball.y += ball.speedY;
-		if (ball.y > S_HEIGHT - platform.height - ball.radius) {
-			ball.y = (int) (2 * (S_HEIGHT - platform.height - ball.radius) - ball.y); 
-			ball.speedY *= -1; 
-		} else if (ball.y < ball.radius) {
-			ball.y += ball.radius; 
-			ball.speedY *= -1;
-		}
 		repaint();
-		
-//		testBall.pos = testBall.pos.add(testBall.vel);
 	}
 
 	@Override
