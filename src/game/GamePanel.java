@@ -51,12 +51,11 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 
 	@Override
 	public void paintComponent(Graphics g) {
+		g.setColor(Color.white);
+		g.fillRect(0, 0, S_WIDTH, S_HEIGHT);
 
 //		ball.draw(g);
 //		brick.draw(g);
-		
-//		g.setColor(Color.white);
-//		g.fillRect(0, 0, S_WIDTH, S_HEIGHT);
 		
 		platform.draw(g);
 		
@@ -91,6 +90,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 				break;
 			case KeyEvent.VK_SPACE:
 				t.stop();
+				actionPerformed(null);
 				break;
 			case KeyEvent.VK_ENTER:
 				t.start();
@@ -108,26 +108,13 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		ball.x += ball.speedX;
-		if (ball.x > S_WIDTH - ball.radius) {
-			ball.x = 2 * (S_WIDTH - ball.radius) - ball.x;
-			ball.speedX *= -1;
-		} else if (ball.x < ball.radius) {
-			ball.x += ball.x;
-			ball.speedX *= -1;
+		testBall.pos = testBall.pos.add(testBall.vel);
+		
+		if(testBall.collide(testBrick)) {
+			System.out.println("Collide!");
 		}
 		
-		ball.y += ball.speedY;
-		if (ball.y > S_HEIGHT - platform.height - ball.radius) {
-			ball.y = (int) (2 * (S_HEIGHT - platform.height - ball.radius) - ball.y); 
-			ball.speedY *= -1; 
-		} else if (ball.y < ball.radius) {
-			ball.y += ball.radius; 
-			ball.speedY *= -1;
-		}
 		repaint();
-		
-//		testBall.pos = testBall.pos.add(testBall.vel);
 	}
 
 	@Override

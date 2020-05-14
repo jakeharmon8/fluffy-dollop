@@ -18,22 +18,26 @@ public class CircleCollider {
 	}
 	
 	public boolean collide(Brick aabb) {
-		Vector2D pointOfIntersection = getPointOfIntersection(aabb);
+		Vector2D pointOfIntersection = getPointOfIntersection(aabb).add(aabb.pos);
 		
-		if(pos.sub(pointOfIntersection).magnitude() > r) {
+		if(pos.sub(pointOfIntersection).magnitude() >= r) {
 			return false;
 		}
+		
+		Vector2D rVec = getRadialIntersection(aabb);
+		pos = pos.add(rVec.mult(-2));
+		vel = getNewVelocity(rVec);
 		
 		return true;
 	}
 	
 	public void drawDebugCollisionInfo(Brick aabb, Graphics g) {
 		getPointOfIntersection(aabb).draw(aabb.pos, g, Color.red);
-		System.out.println("P: " + getPointOfIntersection(aabb));
+//		System.out.println("P: " + getPointOfIntersection(aabb));
 		getCenterToCollision(aabb).draw(pos, g, Color.magenta);
-		System.out.println("D: " + getCenterToCollision(aabb));
+//		System.out.println("D: " + getCenterToCollision(aabb));
 		getRadialIntersection(aabb).draw(getPointOfIntersection(aabb).add(aabb.pos), g, Color.blue);
-		System.out.println("R: " + getRadialIntersection(aabb));
+//		System.out.println("R: " + getRadialIntersection(aabb));
 	}
 	
 	private Vector2D getPointOfIntersection(Brick aabb) {
@@ -48,6 +52,17 @@ public class CircleCollider {
 	private Vector2D getRadialIntersection(Brick aabb) {
 		Vector2D d = getCenterToCollision(aabb);
 		return d.scaleTo(r - d.magnitude());
+	}
+	
+	private Vector2D getNewVelocity(Vector2D rVec) {
+		Vector2D rVecP = new Vector2D(rVec.y, -rVec.x);
+		
+		double det = rVec.x*rVecP.y-rVec.y*rVecP.x;
+		
+		return new Vector2D(
+				(-vel.x*rVec.x*rVecP.y-vel.x*rVec.y*rVecP.x-2*vel.y*rVecP.x*rVecP.y)/det,
+				(2*vel.x*rVec.x*rVec.y+vel.y*rVecP.x*rVec.y+vel.y*rVecP.y*rVec.x)/det
+		);
 	}
 	
 	public void draw(Graphics g) {
