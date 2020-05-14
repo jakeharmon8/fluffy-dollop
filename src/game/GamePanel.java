@@ -30,7 +30,8 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	public Ball ball = new Ball(256, 30, 10);
 	public Brick brick = new Brick(256, 256, 50, 100, Color.pink);
 	
-	public Brick testBrick = new Brick(300, 200, 100, 50, Color.green);
+	public ArrayList<Brick> bricks = new ArrayList<>();
+//	public Brick testBrick = new Brick(300, 200, 100, 50, Color.green);
 	public CircleCollider testBall = new CircleCollider(100, 100, 5, 5, 40);
 	
 	public Timer t;
@@ -39,6 +40,9 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		addKeyListener(this);
 		addMouseMotionListener(this);
 		setPreferredSize(new Dimension(S_WIDTH, S_HEIGHT));
+		
+		bricks.add(new Brick(50, 400, 100, 50, Color.green));
+		bricks.add(new Brick(300, 200, 100, 50, Color.green));
 		
 		t = new Timer(50, this);
 		t.start();
@@ -59,10 +63,12 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		
 		platform.draw(g);
 		
-		testBrick.draw(g);
+		for(Brick b : bricks) {
+			b.draw(g);
+		}
 		testBall.draw(g);
 		
-		testBall.drawDebugCollisionInfo(testBrick, g);
+//		testBall.drawDebugCollisionInfo(testBrick, g);
 	}
 
 	@Override
@@ -110,8 +116,10 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	public void actionPerformed(ActionEvent arg0) {
 		testBall.pos = testBall.pos.add(testBall.vel);
 		
-		if(testBall.collide(testBrick)) {
-			System.out.println("Collide!");
+		for(Brick b : bricks) {
+			if(testBall.collide(b)) {
+				System.out.println("Collide!");
+			}
 		}
 		
 		repaint();
