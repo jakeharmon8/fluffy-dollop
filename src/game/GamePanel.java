@@ -32,7 +32,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	
 	public ArrayList<Brick> bricks = new ArrayList<>();
 //	public Brick testBrick = new Brick(300, 200, 100, 50, Color.green);
-	public CircleCollider testBall = new CircleCollider(100, 100, 5, 5, 40);
+	public CircleCollider testBall = new CircleCollider(120, 100, 10, 10, 16);
 	
 	public Timer t;
 	
@@ -125,6 +125,10 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 			if(testBall.collide(b)) {
 				System.out.println("Collide!");
 			}
+		}
+		
+		if(testBall.collide(platform)) {
+			System.out.println("Collide!");
 		}
 		
 		repaint();
