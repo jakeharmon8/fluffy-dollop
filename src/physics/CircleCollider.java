@@ -26,7 +26,12 @@ public class CircleCollider {
 		
 		Vector2D rVec = getRadialIntersection(aabb);
 		pos = pos.add(rVec.mult(-2));
-		vel = getNewVelocity(rVec);
+		
+		if(aabb.isPlatform) {
+			vel = vel.pointTo(pos.sub(aabb.pos));
+		} else {
+			vel = getNewVelocity(rVec);
+		}
 		
 		return true;
 	}

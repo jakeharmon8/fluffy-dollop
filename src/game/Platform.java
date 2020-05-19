@@ -5,7 +5,7 @@ import java.awt.Graphics;
 public class Platform extends Brick {
 	
 	public Platform(double x, double y, double width, double height, Color c) {
-		super(x, y, width, height, c);
+		super(x, y, width, height, c, true, true);
 		// TODO Auto-generated constructor stub
 		
 	}

@@ -11,6 +11,7 @@ public class Brick {
 	
 	public int hp = 1;
 	public boolean invincible = false;
+	public boolean isPlatform = false;
 
 	public Brick(double x, double y, double width, double height, Color c) {
 		this.pos = new Vector2D(x, y); 
@@ -19,12 +20,13 @@ public class Brick {
 		this.c = c;
 	}
 	
-	public Brick(double x, double y, double width, double height, Color c, boolean invincible) {
+	public Brick(double x, double y, double width, double height, Color c, boolean invincible, boolean isPlatform) {
 		this.pos = new Vector2D(x, y); 
 		this.height = height; 
 		this.width = width; 
 		this.c = c;
 		this.invincible = invincible;
+		this.isPlatform = isPlatform;
 	}
 	
 	
