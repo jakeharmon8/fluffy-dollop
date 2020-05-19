@@ -23,13 +23,15 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	public static int S_WIDTH = 512;
 	public static int S_HEIGHT = 512;
 	
+	boolean movingLeft = false;
+	boolean movingRight = false;
+	boolean lost = false;
+	
 	public Platform platform = new Platform(S_WIDTH/2, S_HEIGHT * 0.95, 75.0, 10.0, Color.black); 
-//	public int ballRadius = 10;
-//	public Ball ball = new Ball(256, S_HEIGHT - 40, 10);
-//	public Brick brick = new Brick(256, 256, 50, 100, Color.pink);
+	public int ballRadius = 16;
 	public ArrayList<Brick> bricks = new ArrayList<>();
-//	public Brick testBrick = new Brick(300, 200, 100, 50, Color.green);
-	public CircleCollider testBall = new CircleCollider(S_WIDTH/2, S_HEIGHT*.8, 10, -10, 16);
+	public CircleCollider testBall = new CircleCollider(S_WIDTH/2, 
+			platform.pos.y - platform.height/2 - 16, 0, 0, ballRadius);
 	
 	public Timer t;
 	
@@ -39,7 +41,6 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		setPreferredSize(new Dimension(S_WIDTH, S_HEIGHT));
 		
 		bricks.add(new Brick(S_WIDTH/2, 0, S_WIDTH, S_HEIGHT/32, Color.black, true));
-		bricks.add(new Brick(S_WIDTH/2, S_HEIGHT, S_WIDTH, S_HEIGHT/32, Color.black, true));
 		bricks.add(new Brick(0, S_HEIGHT/2, S_WIDTH/32, S_HEIGHT, Color.black, true));
 		bricks.add(new Brick(S_WIDTH, S_HEIGHT/2, S_WIDTH/32, S_HEIGHT, Color.black, true));
 		
@@ -48,9 +49,6 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 				bricks.add(new Brick(i * 100 + 150, j * 50 + 100, 90, 45, Color.green));
 			}
 		}
-//		bricks.add(new Brick(300, 200, 100, 50, Color.green));
-//		bricks.add(new Brick(100, 400, 100, 50, Color.green));
-//		bricks.add(new Brick(400, 40, 100, 50, Color.green));
 		
 		t = new Timer(50, this);
 		t.start();
@@ -63,12 +61,14 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 
 	@Override
 	public void paintComponent(Graphics g) {
+		g.setColor(Color.black);
+		String message2 = "You Lose :(";
+		char[] charMessage2 = message2.toCharArray();
+		g.drawChars(charMessage2, 0, message2.length(), 256, 200);
+
 		g.setColor(Color.white);
 		g.fillRect(0, 0, S_WIDTH, S_HEIGHT);
 
-//		ball.draw(g);
-//		brick.draw(g);
-		
 		platform.draw(g);
 		
 		for(Brick b : bricks) {
@@ -76,17 +76,25 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 		}
 		testBall.draw(g);
 		
-//		testBall.drawDebugCollisionInfo(testBrick, g);
+		if (lost) {
+			g.setColor(Color.white);
+			g.fillRect(0, 0, S_WIDTH, S_HEIGHT);
+			g.setColor(Color.black);
+			String message = "You Lose :(";
+			char[] charMessage = message.toCharArray();
+			g.drawChars(charMessage, 0, message.length(), 256, 200);
+		}
+		
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
 		switch(e.getKeyCode()) {
 			case KeyEvent.VK_RIGHT:
-				platform.pos.x += 10;
+				movingRight = true;
 				break;
 			case KeyEvent.VK_LEFT:
-				platform.pos.x -= 10;
+				movingLeft = true;
 				break;
 			case KeyEvent.VK_S:
 				break;
@@ -97,8 +105,8 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 			case KeyEvent.VK_Q:
 				break;
 			case KeyEvent.VK_SPACE:
-				t.stop();
-				actionPerformed(null);
+				testBall.vel.x = -10; 
+				testBall.vel.y = -10;
 				break;
 			case KeyEvent.VK_ENTER:
 				t.start();
@@ -109,7 +117,30 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {}
+	public void keyReleased(KeyEvent e) {
+		switch(e.getKeyCode()) {
+		case KeyEvent.VK_RIGHT:
+			movingRight = false;
+			break;
+		case KeyEvent.VK_LEFT:
+			movingLeft = false;
+			break;
+		case KeyEvent.VK_S:
+			break;
+		case KeyEvent.VK_D:
+			break;
+		case KeyEvent.VK_E:
+			break;
+		case KeyEvent.VK_Q:
+			break;
+		case KeyEvent.VK_SPACE:
+			break;
+		case KeyEvent.VK_ENTER:
+			t.start();
+			break;
+		}
+			
+	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {}
@@ -117,6 +148,12 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		testBall.pos = testBall.pos.add(testBall.vel);
+		
+		if (movingLeft && platform.pos.x - 15 - platform.width/2 > 0) {
+			platform.pos.x -= 15;
+		} else if (movingRight && platform.pos.x + 15 + platform.width/2 < S_WIDTH) {
+			platform.pos.x += 15;
+		}
 		
 		ArrayList<Brick> toRemove = new ArrayList<>();
 		for(Brick b : bricks) {
@@ -136,13 +173,16 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener, Mo
 			System.out.println("Collide!");
 		}
 		
+		if (testBall.pos.y + testBall.r >= S_HEIGHT) {
+			lost = true;
+		}
+		
 		repaint();
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		testBall.pos = new Vector2D(e.getX(), e.getY());
-		
 		repaint();
 	}
 

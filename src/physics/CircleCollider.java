@@ -9,7 +9,7 @@ public class CircleCollider {
 	public Vector2D pos, vel;
 	public double r;
 	
-	public static final Color debugColor = Color.ORANGE; // lime green
+//	public static final Color debugColor = Color.ORANGE; // lime green
 	
 	public CircleCollider(double x, double y, double dx, double dy, double r) {
 		this.pos = new Vector2D(x, y);
@@ -66,7 +66,11 @@ public class CircleCollider {
 	}
 	
 	public void draw(Graphics g) {
-		g.setColor(debugColor);
-		g.drawOval((int) (pos.x - r), (int) (pos.y - r), (int) (r*2), (int) (r*2));
+		g.setColor(Color.red.darker());
+		g.fillOval((int)(pos.x-r), (int)(pos.y-r), (int)(2*r), (int)(2*r));
+		g.setColor(Color.red);
+		g.fillOval((int)(pos.x -r + 2), (int)(pos.y - r + 2), (int)(2 * r - 5), (int)(2 * r - 5));
+		g.setColor(Color.white);
+		g.fillOval((int)(pos.x - r + 5), (int)(pos.y - r + 5), 3, 3);
 	}
 }
